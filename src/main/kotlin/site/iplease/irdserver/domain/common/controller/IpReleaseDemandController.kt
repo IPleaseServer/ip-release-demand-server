@@ -8,10 +8,15 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 import site.iplease.irdserver.domain.common.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.domain.common.data.response.CreateReleaseDemandResponse
+import site.iplease.irdserver.domain.common.service.DemandService
+import site.iplease.irdserver.domain.common.util.DemandConverter
 
 @RestController
 @RequestMapping("/api/v1/demand/release")
-class IpReleaseDemandController {
+class IpReleaseDemandController(
+    private val demandConverter: DemandConverter,
+    private val demandService: DemandService
+) {
     @PostMapping
     fun createReleaseDemand(@RequestBody releaseDemand: CreateReleaseDemandRequest): Mono<ResponseEntity<CreateReleaseDemandResponse>> {
         TODO()
