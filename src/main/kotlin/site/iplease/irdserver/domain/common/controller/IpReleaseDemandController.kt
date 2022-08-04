@@ -18,7 +18,9 @@ class IpReleaseDemandController(
     private val demandService: DemandService
 ) {
     @PostMapping
-    fun createReleaseDemand(@RequestBody releaseDemand: CreateReleaseDemandRequest): Mono<ResponseEntity<CreateReleaseDemandResponse>> {
-        TODO()
-    }
+    fun createReleaseDemand(@RequestBody request: CreateReleaseDemandRequest): Mono<ResponseEntity<CreateReleaseDemandResponse>> =
+        demandConverter.toDto(request)
+            .flatMap { demandService.addDemand(it) }
+            .flatMap { demandConverter.toResponse(it) }
+            .map { ResponseEntity.ok(it) }
 }
