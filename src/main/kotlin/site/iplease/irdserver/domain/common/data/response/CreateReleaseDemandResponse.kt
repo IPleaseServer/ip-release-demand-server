@@ -1,3 +1,3 @@
 package site.iplease.irdserver.domain.common.data.response
 
-data class CreateReleaseDemandResponse(val demandId: String)
+data class CreateReleaseDemandResponse(val demandId: Long)
