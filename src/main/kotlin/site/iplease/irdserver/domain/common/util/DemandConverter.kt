@@ -8,7 +8,7 @@ import site.iplease.irdserver.domain.common.dto.DemandDto
 
 interface DemandConverter {
     fun toEntity(dto: DemandDto): Mono<Demand>
-    fun toDto(request: Demand): Mono<DemandDto>
+    fun toDto(entity: Demand): Mono<DemandDto>
     fun toDto(request: CreateReleaseDemandRequest): Mono<DemandDto>
     fun toResponse(resultDto: DemandDto): Mono<CreateReleaseDemandResponse>
 
