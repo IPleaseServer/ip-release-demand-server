@@ -20,4 +20,8 @@ class DemandServiceImpl(
             .map { it.copy(id=0) }
             .flatMap { demandRepository.save(it) }
             .flatMap { demandConverter.toDto(it) }
+
+    override fun cancelDemand(dto: DemandDto): Mono<Long> {
+        TODO("Not yet implemented")
+    }
 }
