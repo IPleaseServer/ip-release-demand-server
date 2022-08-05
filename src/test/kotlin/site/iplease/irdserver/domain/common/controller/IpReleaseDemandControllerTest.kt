@@ -15,11 +15,13 @@ import site.iplease.irdserver.domain.common.data.response.CreateReleaseDemandRes
 import site.iplease.irdserver.domain.common.dto.DemandDto
 import site.iplease.irdserver.domain.common.service.DemandService
 import site.iplease.irdserver.domain.common.util.DemandConverter
+import site.iplease.irdserver.infra.alarm.service.PushAlarmService
 import kotlin.random.Random
 
 class IpReleaseDemandControllerTest {
     private lateinit var demandConverter: DemandConverter
     private lateinit var demandService: DemandService
+    private lateinit var pushAlarmService: PushAlarmService
     private lateinit var target: IpReleaseDemandController
     //private lateinit var
 
@@ -27,7 +29,8 @@ class IpReleaseDemandControllerTest {
     fun beforeEach() {
         demandConverter = mock()
         demandService = mock()
-        target = IpReleaseDemandController(demandConverter, demandService)
+        pushAlarmService = mock()
+        target = IpReleaseDemandController(demandConverter, demandService, pushAlarmService)
     }
 
     //acceptReleaseDemand 로직
@@ -40,13 +43,15 @@ class IpReleaseDemandControllerTest {
     fun testAcceptReleaseDemand_success() {
         //given
         val demandId = Random.nextLong()
+        val acceptedDto = mock<DemandDto>()
         val acceptDemandId = Random.nextLong().let { if (it == demandId) 1-demandId else it } //중복 및 오버플로우 방지
         val dto = mock<DemandDto>()
         val response = mock<AcceptReleaseDemandResponse>()
 
         //when
         whenever(demandConverter.toDto(demandId)).thenReturn(dto.toMono())
-        whenever(demandService.acceptDemand(dto)).thenReturn(acceptDemandId.toMono())
+        whenever(demandService.acceptDemand(dto)).thenReturn(acceptedDto.toMono())
+        whenever(acceptedDto.id).thenReturn(acceptDemandId)
         whenever(demandConverter.toAcceptReleaseDemandResponse(acceptDemandId)).thenReturn(response.toMono())
 
         val result = target.acceptReleaseDemand(demandId).block()!!

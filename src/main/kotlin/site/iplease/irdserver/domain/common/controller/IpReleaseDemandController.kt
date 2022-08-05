@@ -16,12 +16,14 @@ import site.iplease.irdserver.domain.common.data.response.CreateReleaseDemandRes
 import site.iplease.irdserver.domain.common.data.response.CancelReleaseDemandResponse
 import site.iplease.irdserver.domain.common.service.DemandService
 import site.iplease.irdserver.domain.common.util.DemandConverter
+import site.iplease.irdserver.infra.alarm.service.PushAlarmService
 
 @RestController
 @RequestMapping("/api/v1/demand/release")
 class IpReleaseDemandController(
     private val demandConverter: DemandConverter,
-    private val demandService: DemandService
+    private val demandService: DemandService,
+    private val pushAlarmService: PushAlarmService
 ) {
     @PostMapping //TODO Gateway Server에서 보내주는 X-Authorization-Id 로 issuer 판독하도록 로직변경
     fun createReleaseDemand(@RequestBody request: CreateReleaseDemandRequest): Mono<ResponseEntity<CreateReleaseDemandResponse>> =
@@ -44,7 +46,7 @@ class IpReleaseDemandController(
     ): Mono<ResponseEntity<AcceptReleaseDemandResponse>> =
         demandConverter.toDto(demandId = demandId)
             .flatMap { demandService.acceptDemand(it) }
-            .flatMap { demandConverter.toAcceptReleaseDemandResponse(it) }
+            .flatMap { demandConverter.toAcceptReleaseDemandResponse(it.id) }
             .map { ResponseEntity.ok(it) }
 
 }
