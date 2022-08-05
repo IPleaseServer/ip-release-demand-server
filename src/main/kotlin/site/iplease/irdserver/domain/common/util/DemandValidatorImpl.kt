@@ -21,6 +21,7 @@ class DemandValidatorImpl(
             DemandPolicyType.DEMAND_CREATE -> isNotExistsByAssignIpId(dto.assignIpId)
                 .flatMap { isAssignIpExists(dto.assignIpId) }
                 .flatMap { isAssignIpOwner(dto.assignIpId, dto.issuerId) }
+            else ->{TODO()}
         }
 
     private fun isNotExistsByAssignIpId(assignIpId: Long): Mono<Unit> =

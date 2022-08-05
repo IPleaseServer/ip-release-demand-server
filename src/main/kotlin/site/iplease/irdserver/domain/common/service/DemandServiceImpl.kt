@@ -2,6 +2,7 @@ package site.iplease.irdserver.domain.common.service
 
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.data.type.DemandPolicyType
 import site.iplease.irdserver.domain.common.dto.DemandDto
 import site.iplease.irdserver.domain.common.repository.DemandRepository
@@ -21,7 +22,8 @@ class DemandServiceImpl(
             .flatMap { demandRepository.save(it) }
             .flatMap { demandConverter.toDto(it) }
 
-    override fun cancelDemand(dto: DemandDto): Mono<Long> {
-        TODO("Not yet implemented")
-    }
+    override fun cancelDemand(dto: DemandDto): Mono<Long> =
+        demandValidator.validate(dto, DemandPolicyType.DEMAND_CANCEL)
+            .flatMap { demandRepository.deleteById(dto.id) }
+            .then(dto.id.toMono())
 }
