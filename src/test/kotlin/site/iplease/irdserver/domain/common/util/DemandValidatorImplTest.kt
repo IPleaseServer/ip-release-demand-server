@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import reactor.kotlin.core.publisher.toMono
-import site.iplease.irdserver.domain.common.data.entity.Demand
 import site.iplease.irdserver.domain.common.data.type.DemandPolicyType
 import site.iplease.irdserver.domain.common.dto.DemandDto
 import site.iplease.irdserver.domain.common.repository.DemandRepository
@@ -29,39 +28,10 @@ class DemandValidatorImplTest {
         target = DemandValidatorImpl(demandRepository, assignIpQueryService)
     }
 
-    //validateDemandCancel 로직
-    //아래의 조건을 검사한다.
-    //- 신청이 존재해야한다.
-    //- issuer가 신청에 대한 소유권을 가지고있어야한다.
-
-    @Test @DisplayName("신청취소정책검증 성공 테스트")
-    fun testValidateDemandCancel_success() {
-        //given
-        val issuerId = Random.nextLong()
-        val demandId = Random.nextLong()
-        val dto = mock<DemandDto>()
-        val entity = mock<Demand>()
-
-        //when
-        whenever(dto.id).thenReturn(demandId)
-        whenever(dto.issuerId).thenReturn(issuerId)
-        whenever(entity.issuerId).thenReturn(issuerId)
-        whenever(demandRepository.existsById(dto.id)).thenReturn(true.toMono())
-        whenever(demandRepository.findById(demandId)).thenReturn(entity.toMono())
-
-        val result = target.validate(dto, DemandPolicyType.DEMAND_CANCEL).block()!!
-
-        //then
-        assertEquals(result, Unit)
-        verify(demandRepository, times(1)).existsById(dto.id)
-        verify(demandRepository, times(1)).findById(dto.id)
-    }
-
     //validateDemandCreate 로직
-    //아래의 조건을 검사한다.
-    //- 같은 할당IP에 대한 해제신청이 존재하지 않아야한다.
-    //- issuer가 할당IP에 대한 소유권을 가지고있어야한다.
-    //- 할당IP가 존재해야한다.
+    //같은 할당IP에 대한 해제신청이 존재하는지 검사한다.
+    //issuer가 할당IP에 대한 소유권을 가지고있는지 검사한다.
+    //할당IP가 존재하는지 검사한다.
 
     @Test @DisplayName("신청추가정책검증 성공 테스트")
     fun testValidateDemandCreate_success() {

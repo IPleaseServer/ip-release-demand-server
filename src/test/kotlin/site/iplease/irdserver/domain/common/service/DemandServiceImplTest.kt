@@ -15,7 +15,6 @@ import site.iplease.irdserver.domain.common.dto.DemandDto
 import site.iplease.irdserver.domain.common.repository.DemandRepository
 import site.iplease.irdserver.domain.common.util.DemandConverter
 import site.iplease.irdserver.domain.common.util.DemandValidator
-import kotlin.random.Random
 
 class DemandServiceImplTest {
     private lateinit var demandRepository: DemandRepository
@@ -29,25 +28,6 @@ class DemandServiceImplTest {
         demandValidator = mock()
         demandConverter = mock()
         demandService = DemandServiceImpl(demandRepository, demandValidator, demandConverter)
-    }
-
-    @Test @DisplayName("신청취소 성공 테스트")
-    fun cancelDemand_success() {
-        //given
-        val demandId = Random.nextLong()
-        val dto = mock<DemandDto>()
-
-        //when
-        whenever(dto.id).thenReturn(demandId)
-        whenever(demandValidator.validate(dto, DemandPolicyType.DEMAND_CANCEL)).thenReturn(Unit.toMono())
-        whenever(demandRepository.deleteById(demandId)).thenReturn(Unit.toMono().then())
-
-        val result = demandService.cancelDemand(dto).block()!!
-
-        //then
-        assertEquals(result, demandId)
-        verify(demandValidator, times(1)).validate(dto, DemandPolicyType.DEMAND_CANCEL)
-        verify(demandRepository, times(1)).deleteById(demandId)
     }
 
     @Test @DisplayName("신청추가 성공 테스트")
