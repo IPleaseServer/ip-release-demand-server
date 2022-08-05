@@ -5,6 +5,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.data.entity.Demand
 import site.iplease.irdserver.domain.common.data.request.CreateReleaseDemandRequest
+import site.iplease.irdserver.domain.common.data.response.CancelReleaseDemandResponse
 import site.iplease.irdserver.domain.common.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.common.dto.DemandDto
 
@@ -24,6 +25,13 @@ class DemandConverterImpl: DemandConverter {
             issuerId = entity.issuerId
         ) }
 
+    override fun toDto(issuerId: Long, demandId: Long): Mono<DemandDto> =
+        Unit.toMono().map { DemandDto(
+            id = demandId,
+            assignIpId = -1,
+            issuerId = issuerId
+        ) }
+
     override fun toDto(request: CreateReleaseDemandRequest): Mono<DemandDto> =
         Unit.toMono().map { DemandDto(
             id = 0,
@@ -31,6 +39,9 @@ class DemandConverterImpl: DemandConverter {
             issuerId = request.issuerId
         ) }
 
-    override fun toResponse(resultDto: DemandDto): Mono<CreateReleaseDemandResponse> =
-        Unit.toMono().map { CreateReleaseDemandResponse(demandId = resultDto.id) }
+    override fun toCreateReleaseDemandResponse(dto: DemandDto): Mono<CreateReleaseDemandResponse> =
+        Unit.toMono().map { CreateReleaseDemandResponse(demandId = dto.id) }
+
+    override fun toCancelReleaseDemandResponse(demandId: Long): Mono<CancelReleaseDemandResponse> =
+        Unit.toMono().map { CancelReleaseDemandResponse(removedDemandId = demandId) }
 }
