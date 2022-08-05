@@ -4,11 +4,9 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.data.type.DemandPolicyType
+import site.iplease.irdserver.domain.common.data.type.DemandStatusType
 import site.iplease.irdserver.domain.common.dto.DemandDto
-import site.iplease.irdserver.domain.common.exception.AlreadyDemandedAssignIpException
-import site.iplease.irdserver.domain.common.exception.PermissionDeniedException
-import site.iplease.irdserver.domain.common.exception.UnknownAssignIpException
-import site.iplease.irdserver.domain.common.exception.UnknownDemandException
+import site.iplease.irdserver.domain.common.exception.*
 import site.iplease.irdserver.domain.common.repository.DemandRepository
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 
@@ -24,7 +22,15 @@ class DemandValidatorImpl(
                 .flatMap { isAssignIpOwner(dto.assignIpId, dto.issuerId) }
             DemandPolicyType.DEMAND_CANCEL -> isExists(dto.id)
                 .flatMap { isOwner(dto.id, dto.issuerId) }
+            DemandPolicyType.DEMAND_ACCEPT -> isExists(dto.id)
+                .flatMap { isCanAccept(dto.id) }
         }
+
+    private fun isCanAccept(id: Long): Mono<Unit> =
+        demandRepository.findById(id).flatMap { demand ->
+                if(demand.status != DemandStatusType.ACCEPT) Unit.toMono()
+                else Mono.error(AlreadyAcceptedDemandException("이미 수락된 신청입니다! - 신청 ID: ${demand.id}"))
+            }
 
     private fun isOwner(id: Long, issuerId: Long): Mono<Unit> =
         demandRepository.findById(id).flatMap { demand ->

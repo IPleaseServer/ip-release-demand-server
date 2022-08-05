@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.controller.IpReleaseDemandController
-import site.iplease.irdserver.domain.common.exception.AlreadyDemandedAssignIpException
-import site.iplease.irdserver.domain.common.exception.PermissionDeniedException
-import site.iplease.irdserver.domain.common.exception.UnknownAssignIpException
-import site.iplease.irdserver.domain.common.exception.UnknownDemandException
+import site.iplease.irdserver.domain.common.exception.*
 import site.iplease.irdserver.global.error.ErrorResponse
 import site.iplease.irdserver.global.error.ErrorStatus
 
@@ -47,6 +44,15 @@ class IpReleaseDemandControllerAdvice {
         ResponseEntity.badRequest()
             .body(ErrorResponse(
                 status = ErrorStatus.UNKNOWN_DEMAND,
+                message = e.getErrorMessage(),
+                detail = e.getErrorDetail()
+            )).toMono()
+
+    @ExceptionHandler(AlreadyAcceptedDemandException::class)
+    fun handle(e: AlreadyAcceptedDemandException): Mono<ResponseEntity<ErrorResponse>> =
+        ResponseEntity.badRequest()
+            .body(ErrorResponse(
+                status = ErrorStatus.ALREADY_ACCEPTED_ASSIGN_IP,
                 message = e.getErrorMessage(),
                 detail = e.getErrorDetail()
             )).toMono()
