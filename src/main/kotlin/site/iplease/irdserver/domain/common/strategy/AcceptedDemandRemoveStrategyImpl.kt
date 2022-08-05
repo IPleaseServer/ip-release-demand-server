@@ -1,8 +1,10 @@
 package site.iplease.irdserver.domain.common.strategy
 
+import org.springframework.stereotype.Component
 import site.iplease.irdserver.domain.common.data.type.DemandStatusType
 import site.iplease.irdserver.domain.common.repository.DemandRepository
 
+@Component
 class AcceptedDemandRemoveStrategyImpl(
     private val demandRepository: DemandRepository
     ) : AcceptedDemandRemoveStrategy {
