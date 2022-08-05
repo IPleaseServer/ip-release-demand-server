@@ -25,9 +25,12 @@ class DemandConverterImpl: DemandConverter {
             issuerId = entity.issuerId
         ) }
 
-    override fun toDto(issuerId: Long, demandId: Long): Mono<DemandDto> {
-        TODO("Not yet implemented")
-    }
+    override fun toDto(issuerId: Long, demandId: Long): Mono<DemandDto> =
+        Unit.toMono().map { DemandDto(
+            id = demandId,
+            assignIpId = -1,
+            issuerId = issuerId
+        ) }
 
     override fun toDto(request: CreateReleaseDemandRequest): Mono<DemandDto> =
         Unit.toMono().map { DemandDto(
@@ -39,7 +42,6 @@ class DemandConverterImpl: DemandConverter {
     override fun toCreateReleaseDemandResponse(dto: DemandDto): Mono<CreateReleaseDemandResponse> =
         Unit.toMono().map { CreateReleaseDemandResponse(demandId = dto.id) }
 
-    override fun toCancelReleaseDemandResponse(demandId: Long): Mono<CancelReleaseDemandResponse> {
-        TODO("Not yet implemented")
-    }
+    override fun toCancelReleaseDemandResponse(demandId: Long): Mono<CancelReleaseDemandResponse> =
+        Unit.toMono().map { CancelReleaseDemandResponse(removedDemandId = demandId) }
 }
