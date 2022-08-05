@@ -9,6 +9,7 @@ import site.iplease.irdserver.domain.common.controller.IpReleaseDemandController
 import site.iplease.irdserver.domain.common.exception.AlreadyDemandedAssignIpException
 import site.iplease.irdserver.domain.common.exception.PermissionDeniedException
 import site.iplease.irdserver.domain.common.exception.UnknownAssignIpException
+import site.iplease.irdserver.domain.common.exception.UnknownDemandException
 import site.iplease.irdserver.global.error.ErrorResponse
 import site.iplease.irdserver.global.error.ErrorStatus
 
@@ -19,8 +20,8 @@ class IpReleaseDemandControllerAdvice {
         ResponseEntity.badRequest()
         .body(ErrorResponse(
             status = ErrorStatus.ALREADY_DEMANDED_ASSIGN_IP,
-            message = "이미 할당해제신청된 할당IP입니다.",
-            detail = e.localizedMessage
+            message = e.getErrorMessage(),
+            detail = e.getErrorDetail()
         )).toMono()
 
     @ExceptionHandler(PermissionDeniedException::class)
@@ -28,8 +29,8 @@ class IpReleaseDemandControllerAdvice {
         ResponseEntity.badRequest()
             .body(ErrorResponse(
                 status = ErrorStatus.PERMISSION_DENIED,
-                message = "해당 기능에 접근할 권한이 없습니다.",
-                detail = e.localizedMessage
+                message = e.getErrorMessage(),
+                detail = e.getErrorDetail()
             )).toMono()
 
     @ExceptionHandler(UnknownAssignIpException::class)
@@ -37,7 +38,16 @@ class IpReleaseDemandControllerAdvice {
         ResponseEntity.badRequest()
             .body(ErrorResponse(
                 status = ErrorStatus.UNKNOWN_ASSIGN_IP,
-                message = "존재하지 않는 할당IP입니다.",
-                detail = e.localizedMessage
+                message = e.getErrorMessage(),
+                detail = e.getErrorDetail()
+            )).toMono()
+
+    @ExceptionHandler(UnknownDemandException::class)
+    fun handle(e: UnknownDemandException): Mono<ResponseEntity<ErrorResponse>> =
+        ResponseEntity.badRequest()
+            .body(ErrorResponse(
+                status = ErrorStatus.UNKNOWN_DEMAND,
+                message = e.getErrorMessage(),
+                detail = e.getErrorDetail()
             )).toMono()
 }
