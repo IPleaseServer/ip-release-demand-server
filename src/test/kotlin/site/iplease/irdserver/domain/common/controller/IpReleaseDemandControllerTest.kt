@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.data.request.CreateReleaseDemandRequest
+import site.iplease.irdserver.domain.common.data.response.AcceptReleaseDemandResponse
 import site.iplease.irdserver.domain.common.data.response.CancelReleaseDemandResponse
 import site.iplease.irdserver.domain.common.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.common.dto.DemandDto
@@ -29,11 +30,37 @@ class IpReleaseDemandControllerTest {
         target = IpReleaseDemandController(demandConverter, demandService)
     }
 
+    //acceptReleaseDemand 로직
+    //요청정보를 DemandDto로 치환한다. DemandConverter
+    //치환된 DemandDto를 통해 신청수락 트랜잭션을 호출한다. DemandService
+    //수락된 신청의 Id를 통해 응답값을 구성한다.
+    //구성된 응답값을 ResponseEntity에 감싸서 반환한다.
+
+    @Test @DisplayName("할당해제신청수락 성공 테스트")
+    fun testAcceptReleaseDemand_success() {
+        //given
+        val demandId = Random.nextLong()
+        val acceptDemandId = Random.nextLong().let { if (it == demandId) 1-demandId else it } //중복 및 오버플로우 방지
+        val dto = mock<DemandDto>()
+        val response = mock<AcceptReleaseDemandResponse>()
+
+        //when
+        whenever(demandConverter.toDto(demandId)).thenReturn(dto.toMono())
+        whenever(demandService.acceptDemand(dto)).thenReturn(acceptDemandId.toMono())
+        whenever(demandConverter.toAcceptReleaseDemandResponse(acceptDemandId)).thenReturn(response.toMono())
+
+        val result = target.acceptReleaseDemand(demandId).block()!!
+
+        //then
+        assertTrue(result.statusCode.is2xxSuccessful)
+        assertEquals(result.body, response)
+    }
+
     //cancelReleaseDemand 로직
     //요청정보를 DemandDto로 치환한다. DemandConverter
     //치환된 DemandDto를 통해 신청취소 트랜잭션을 호출한다. DemandService
-    //취소된 신청의 Id를 통해 응답값을 구성한다
-    //구성된 응답값을 ResponseEntity에 감싸서 반환한다
+    //취소된 신청의 Id를 통해 응답값을 구성한다.
+    //구성된 응답값을 ResponseEntity에 감싸서 반환한다.
 
     @Test @DisplayName("할당해제신청취소 성공 테스트")
     fun testCancelReleaseDemand_success() {

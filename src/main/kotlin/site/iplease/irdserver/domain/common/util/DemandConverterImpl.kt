@@ -5,6 +5,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.data.entity.Demand
 import site.iplease.irdserver.domain.common.data.request.CreateReleaseDemandRequest
+import site.iplease.irdserver.domain.common.data.response.AcceptReleaseDemandResponse
 import site.iplease.irdserver.domain.common.data.response.CancelReleaseDemandResponse
 import site.iplease.irdserver.domain.common.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.common.dto.DemandDto
@@ -17,6 +18,10 @@ class DemandConverterImpl: DemandConverter {
             assignIpId = dto.assignIpId,
             issuerId = dto.issuerId
         ) }
+
+    override fun toDto(demandId: Long): Mono<DemandDto> {
+        TODO("Not yet implemented")
+    }
 
     override fun toDto(entity: Demand): Mono<DemandDto> =
         Unit.toMono().map { DemandDto(
@@ -44,4 +49,8 @@ class DemandConverterImpl: DemandConverter {
 
     override fun toCancelReleaseDemandResponse(demandId: Long): Mono<CancelReleaseDemandResponse> =
         Unit.toMono().map { CancelReleaseDemandResponse(removedDemandId = demandId) }
+
+    override fun toAcceptReleaseDemandResponse(demandId: Long): Mono<AcceptReleaseDemandResponse> {
+        TODO("Not yet implemented")
+    }
 }

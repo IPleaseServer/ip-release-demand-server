@@ -26,4 +26,8 @@ class DemandServiceImpl(
         demandValidator.validate(dto, DemandPolicyType.DEMAND_CANCEL)
             .flatMap { demandRepository.deleteById(dto.id) }
             .then(dto.id.toMono())
+
+    override fun acceptDemand(dto: DemandDto): Mono<Long> {
+        TODO("Not yet implemented")
+    }
 }
