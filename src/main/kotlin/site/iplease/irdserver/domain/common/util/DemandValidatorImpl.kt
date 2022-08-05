@@ -24,6 +24,7 @@ class DemandValidatorImpl(
                 .flatMap { isAssignIpOwner(dto.assignIpId, dto.issuerId) }
             DemandPolicyType.DEMAND_CANCEL -> isExists(dto.id)
                 .flatMap { isOwner(dto.id, dto.issuerId) }
+            DemandPolicyType.DEMAND_ACCEPT -> TODO()
         }
 
     private fun isOwner(id: Long, issuerId: Long): Mono<Unit> =
