@@ -7,5 +7,5 @@ import site.iplease.irdserver.domain.reserve.data.response.CreateIpReleaseReserv
 
 interface ReserveConverter {
     fun toDto(request: CreateIpReleaseReserveRequest): Mono<ReserveDto>
-    fun toCreateIpReleaseReserveResponse(createdReserve: ReserveDto): Mono<CreateIpReleaseReserveResponse>
+    fun toCreateIpReleaseReserveResponse(dto: ReserveDto): Mono<CreateIpReleaseReserveResponse>
 }
