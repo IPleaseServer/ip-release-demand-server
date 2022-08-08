@@ -13,7 +13,7 @@ interface DemandConverter {
     fun toDto(demandId: Long): Mono<DemandDto>
     fun toDto(entity: Demand): Mono<DemandDto>
     fun toDto(issuerId: Long, demandId: Long): Mono<DemandDto>
-    fun toDto(request: CreateReleaseDemandRequest): Mono<DemandDto>
+    fun toDto(request: CreateReleaseDemandRequest, issuerId: Long): Mono<DemandDto>
     fun toCreateReleaseDemandResponse(dto: DemandDto): Mono<CreateReleaseDemandResponse>
     fun toCancelReleaseDemandResponse(demandId: Long): Mono<CancelReleaseDemandResponse>
     fun toAcceptReleaseDemandResponse(demandId: Long): Mono<AcceptReleaseDemandResponse>

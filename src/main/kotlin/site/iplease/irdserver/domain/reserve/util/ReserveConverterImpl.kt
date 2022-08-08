@@ -26,11 +26,11 @@ class ReserveConverterImpl: ReserveConverter {
             releaseAt = entity.releaseAt,
         ) }
 
-    override fun toDto(request: CreateIpReleaseReserveRequest): Mono<ReserveDto> =
+    override fun toDto(request: CreateIpReleaseReserveRequest, issuerId: Long): Mono<ReserveDto> =
         Unit.toMono().map { ReserveDto(
             id = 0,
             assignIpId = request.assignIpId,
-            issuerId = request.issuerId,
+            issuerId = issuerId,
             releaseAt = request.releaseAt
         ) }
 
