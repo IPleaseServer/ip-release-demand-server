@@ -110,17 +110,18 @@ class IpReleaseDemandControllerTest {
     @Test @DisplayName("할당해제신청추가 성공 테스트")
     fun testCreateReleaseDemand_success() {
         //given
+        val issuerId = Random.nextLong()
         val request = mock<CreateReleaseDemandRequest>()
         val dto = mock<DemandDto>()
         val resultDto = mock<DemandDto>()
         val response = mock<CreateReleaseDemandResponse>()
 
         //when
-        whenever(demandConverter.toDto(request)).thenReturn(dto.toMono())
+        whenever(demandConverter.toDto(request, issuerId)).thenReturn(dto.toMono())
         whenever(demandConverter.toCreateReleaseDemandResponse(resultDto)).thenReturn(response.toMono())
         whenever(demandService.addDemand(dto)).thenReturn(resultDto.toMono())
 
-        val result = target.createReleaseDemand(request).block()!!
+        val result = target.createReleaseDemand(issuerId = issuerId, request = request).block()!!
 
         //then
         assertTrue(result.statusCode.is2xxSuccessful)

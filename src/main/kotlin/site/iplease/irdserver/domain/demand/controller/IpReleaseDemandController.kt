@@ -27,9 +27,12 @@ class IpReleaseDemandController(
     private val pushAlarmService: PushAlarmService,
     private val assignIpCommandService: AssignIpCommandService
 ) {
-    @PostMapping //TODO Gateway Server에서 보내주는 X-Authorization-Id 로 issuer 판독하도록 로직변경
-    fun createReleaseDemand(@RequestBody request: CreateReleaseDemandRequest): Mono<ResponseEntity<CreateReleaseDemandResponse>> =
-        demandConverter.toDto(request)
+    @PostMapping
+    fun createReleaseDemand(
+        @RequestHeader("X-Authorization-Id") issuerId: Long,
+        @RequestBody request: CreateReleaseDemandRequest
+    ): Mono<ResponseEntity<CreateReleaseDemandResponse>> =
+        demandConverter.toDto(request, issuerId)
             .flatMap { demandService.addDemand(it) }
             .flatMap { demandConverter.toCreateReleaseDemandResponse(it) }
             .map { ResponseEntity.ok(it) }

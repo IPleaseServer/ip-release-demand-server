@@ -35,17 +35,17 @@ class IpReleaseReserveControllerTest {
         val assignIpId = TestDummyDataUtil.id()
         val issuerId = TestDummyDataUtil.id()
         val releaseAt = TestDummyDataUtil.randomDate()
-        val request = CreateIpReleaseReserveRequest(assignIpId, issuerId, releaseAt)
+        val request = CreateIpReleaseReserveRequest(assignIpId, releaseAt)
         val dto = mock<ReserveDto>()
         val createdReserve = mock<ReserveDto>()
         val response = mock<CreateIpReleaseReserveResponse>()
 
         //when
-        whenever(reserveConverter.toDto(request)).thenReturn(dto.toMono())
+        whenever(reserveConverter.toDto(request, issuerId)).thenReturn(dto.toMono())
         whenever(reserveService.addReserve(dto)).thenReturn(createdReserve.toMono())
         whenever(reserveConverter.toCreateIpReleaseReserveResponse(createdReserve)).thenReturn(response.toMono())
 
-        val result = target.createIpReleaseReserve(request).block()!!
+        val result = target.createIpReleaseReserve(issuerId = issuerId, request = request).block()!!
 
         //then
         assertTrue(result.statusCode.is2xxSuccessful)

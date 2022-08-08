@@ -45,11 +45,11 @@ class DemandConverterImpl: DemandConverter {
             status = DemandStatusType.CREATE,
         ) }
 
-    override fun toDto(request: CreateReleaseDemandRequest): Mono<DemandDto> =
+    override fun toDto(request: CreateReleaseDemandRequest, issuerId: Long): Mono<DemandDto> =
         Unit.toMono().map { DemandDto(
             id = 0,
             assignIpId = request.assignIpId,
-            issuerId = request.issuerId,
+            issuerId = issuerId,
             status = DemandStatusType.CREATE,
         ) }
 
