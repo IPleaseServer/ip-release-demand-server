@@ -4,11 +4,20 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto
+import site.iplease.irdserver.domain.reserve.data.entity.Reserve
 import site.iplease.irdserver.domain.reserve.data.request.CreateIpReleaseReserveRequest
 import site.iplease.irdserver.domain.reserve.data.response.CreateIpReleaseReserveResponse
 
 @Component
 class ReserveConverterImpl: ReserveConverter {
+    override fun toEntity(dto: ReserveDto): Mono<Reserve> {
+        TODO("Not yet implemented")
+    }
+
+    override fun toDto(entity: Reserve): Mono<ReserveDto> {
+        TODO("Not yet implemented")
+    }
+
     override fun toDto(request: CreateIpReleaseReserveRequest): Mono<ReserveDto> =
         Unit.toMono().map { ReserveDto(
             id = 0,
