@@ -1,5 +1,6 @@
 package site.iplease.irdserver.domain.reserve.util
 
+import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto
@@ -10,6 +11,7 @@ import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
 import site.iplease.irdserver.global.common.exception.UnknownAssignIpException
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 
+@Component
 class ReserveValidatorImpl(
     private val reserveRepository: ReserveRepository,
     private val reservePermissionValidator: ReservePermissionValidator,
