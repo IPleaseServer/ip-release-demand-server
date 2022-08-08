@@ -1,4 +1,4 @@
-package site.iplease.irdserver.infra.assign_ip.config
+package site.iplease.irdserver.infra.common.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
