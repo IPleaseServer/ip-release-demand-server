@@ -10,13 +10,21 @@ import site.iplease.irdserver.domain.reserve.data.response.CreateIpReleaseReserv
 
 @Component
 class ReserveConverterImpl: ReserveConverter {
-    override fun toEntity(dto: ReserveDto): Mono<Reserve> {
-        TODO("Not yet implemented")
-    }
+    override fun toEntity(dto: ReserveDto): Mono<Reserve> =
+        Unit.toMono().map { Reserve(
+            id = dto.id,
+            assignIpId = dto.assignIpId,
+            issuerId = dto.issuerId,
+            releaseAt = dto.releaseAt,
+        ) }
 
-    override fun toDto(entity: Reserve): Mono<ReserveDto> {
-        TODO("Not yet implemented")
-    }
+    override fun toDto(entity: Reserve): Mono<ReserveDto> =
+        Unit.toMono().map { ReserveDto(
+            id = entity.id,
+            assignIpId = entity.assignIpId,
+            issuerId = entity.issuerId,
+            releaseAt = entity.releaseAt,
+        ) }
 
     override fun toDto(request: CreateIpReleaseReserveRequest): Mono<ReserveDto> =
         Unit.toMono().map { ReserveDto(
