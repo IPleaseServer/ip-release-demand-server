@@ -1,4 +1,4 @@
-package site.iplease.irdserver.domain.demand.exception
+package site.iplease.irdserver.global.common.exception
 
 import site.iplease.irdserver.global.error.IpleaseError
 

@@ -8,6 +8,8 @@ import site.iplease.irdserver.domain.demand.data.type.DemandStatusType
 import site.iplease.irdserver.domain.demand.dto.DemandDto
 import site.iplease.irdserver.domain.demand.exception.*
 import site.iplease.irdserver.domain.demand.repository.DemandRepository
+import site.iplease.irdserver.global.common.exception.PermissionDeniedException
+import site.iplease.irdserver.global.common.exception.UnknownAssignIpException
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 
 @Component
