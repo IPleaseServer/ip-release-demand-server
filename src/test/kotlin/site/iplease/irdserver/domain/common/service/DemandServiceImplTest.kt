@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.common.data.entity.Demand
 import site.iplease.irdserver.domain.common.data.type.DemandPolicyType
+import site.iplease.irdserver.domain.common.data.type.DemandStatusType
 import site.iplease.irdserver.domain.common.dto.DemandDto
 import site.iplease.irdserver.domain.common.repository.DemandRepository
 import site.iplease.irdserver.domain.common.util.DemandConverter
@@ -29,6 +30,32 @@ class DemandServiceImplTest {
         demandValidator = mock()
         demandConverter = mock()
         demandService = DemandServiceImpl(demandRepository, demandValidator, demandConverter)
+    }
+
+    @Test @DisplayName("신청수락 성공 테스트")
+    fun acceptDemand_success() {
+        //given
+        val demandId = Random.nextLong()
+        val dto = mock<DemandDto>()
+        val entity = mock<Demand>()
+        val acceptedEntity = mock<Demand>()
+        val savedEntity = mock<Demand>()
+        val acceptedDto = mock<DemandDto>()
+
+        //when
+        whenever(demandValidator.validate(dto, DemandPolicyType.DEMAND_ACCEPT)).thenReturn(Unit.toMono())
+        whenever(dto.id).thenReturn(demandId)
+        whenever(demandRepository.findById(demandId)).thenReturn(entity.toMono())
+        whenever(entity.copy(status = DemandStatusType.ACCEPT)).thenReturn(acceptedEntity)
+        whenever(demandRepository.save(acceptedEntity)).thenReturn(savedEntity.toMono())
+        whenever(demandConverter.toDto(savedEntity)).thenReturn(acceptedDto.toMono())
+
+        val result = demandService.acceptDemand(dto).block()!!
+
+        //then
+        verify(demandValidator, times(1)).validate(dto, DemandPolicyType.DEMAND_ACCEPT)
+        verify(demandRepository, times(1)).save(acceptedEntity)
+        assertEquals(result, acceptedDto)
     }
 
     @Test @DisplayName("신청취소 성공 테스트")
