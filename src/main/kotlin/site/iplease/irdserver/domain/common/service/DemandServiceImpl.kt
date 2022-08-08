@@ -28,10 +28,10 @@ class DemandServiceImpl(
             .flatMap { demandRepository.deleteById(dto.id) }
             .then(dto.id.toMono())
 
-    override fun acceptDemand(dto: DemandDto): Mono<Long> =
+    override fun acceptDemand(dto: DemandDto): Mono<DemandDto> =
         demandValidator.validate(dto, DemandPolicyType.DEMAND_ACCEPT)
             .flatMap { demandRepository.findById(dto.id) }
             .map { it.copy(status = DemandStatusType.ACCEPT) }
             .flatMap { demandRepository.save(it) }
-            .map { it.id }
+            .flatMap { demandConverter.toDto(it) }
 }

@@ -40,6 +40,7 @@ class DemandServiceImplTest {
         val entity = mock<Demand>()
         val acceptedEntity = mock<Demand>()
         val savedEntity = mock<Demand>()
+        val acceptedDto = mock<DemandDto>()
 
         //when
         whenever(demandValidator.validate(dto, DemandPolicyType.DEMAND_ACCEPT)).thenReturn(Unit.toMono())
@@ -47,14 +48,14 @@ class DemandServiceImplTest {
         whenever(demandRepository.findById(demandId)).thenReturn(entity.toMono())
         whenever(entity.copy(status = DemandStatusType.ACCEPT)).thenReturn(acceptedEntity)
         whenever(demandRepository.save(acceptedEntity)).thenReturn(savedEntity.toMono())
-        whenever(savedEntity.id).thenReturn(demandId)
+        whenever(demandConverter.toDto(savedEntity)).thenReturn(acceptedDto.toMono())
 
         val result = demandService.acceptDemand(dto).block()!!
 
         //then
         verify(demandValidator, times(1)).validate(dto, DemandPolicyType.DEMAND_ACCEPT)
         verify(demandRepository, times(1)).save(acceptedEntity)
-        assertEquals(result, demandId)
+        assertEquals(result, acceptedDto)
     }
 
     @Test @DisplayName("신청취소 성공 테스트")
