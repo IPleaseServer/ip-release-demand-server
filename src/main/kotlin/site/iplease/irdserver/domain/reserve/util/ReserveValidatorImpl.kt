@@ -9,6 +9,7 @@ import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType
 import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType.*
 import site.iplease.irdserver.domain.reserve.exception.AlreadyReservedAssignIpException
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
+import site.iplease.irdserver.global.common.exception.PermissionDeniedException
 import site.iplease.irdserver.global.common.exception.UnknownAssignIpException
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 
@@ -25,7 +26,15 @@ class ReserveValidatorImpl(
                     .flatMap { isAssignIpExists(dto.assignIpId) }
                     .flatMap { hasPermission(ReservePermission.CREATE, assignIpId =  dto.assignIpId, issuerId = dto.issuerId) }
 
-            RESERVE_CANCEL -> isExistsByAssignIpId(dto.assignIpId, Mono.defer { Mono.error(UnknownAssignIpException("해당 id의 할당IP이 존재하지 않습니다!")) }, Unit.toMono())
+            RESERVE_CANCEL -> 
+                isExistsByAssignIpId(dto.assignIpId, Mono.defer { Mono.error(UnknownAssignIpException("해당 id의 할당IP이 존재하지 않습니다!")) }, Unit.toMono())
+                    .flatMap { isOwner(dto.id, dto.issuerId) }
+        }
+
+    private fun isOwner(id: Long, issuerId: Long): Mono<Unit> =
+        reserveRepository.findById(id).flatMap { reserve ->
+            if(reserve.issuerId == issuerId) Unit.toMono()
+            else Mono.error(PermissionDeniedException("IP할당해제예약취소는 신청의 소유자만 가능합니다! - 예약 ID: $id, 예약자 ID: ${reserve.issuerId}, 요청자 ID: $issuerId"))
         }
 
     private fun isExistsByAssignIpId(assignIpId: Long, whenExists: Mono<Unit>, orElse: Mono<Unit>): Mono<Unit> =
