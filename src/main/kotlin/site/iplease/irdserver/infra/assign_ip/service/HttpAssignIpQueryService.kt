@@ -1,11 +1,17 @@
 package site.iplease.irdserver.infra.assign_ip.service
 
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
+import site.iplease.irdserver.global.error.ErrorResponse
+import site.iplease.irdserver.global.error.ErrorStatus
 import site.iplease.irdserver.infra.assign_ip.data.dto.AssignIpDto
 import site.iplease.irdserver.infra.assign_ip.data.response.AssignIpQueryResponse
+import site.iplease.irdserver.infra.assign_ip.data.response.ExistsAssignIpQueryResponse
+import site.iplease.irdserver.infra.assign_ip.data.type.QueryType
+import site.iplease.irdserver.infra.assign_ip.exception.ApiException
 
 @Service
 class HttpAssignIpQueryService(
@@ -16,18 +22,29 @@ class HttpAssignIpQueryService(
         webClientBuilder
             .build()
             .get()
-            .uri("lb://assign-ip-manage-server/api/v1/assign-ip/query/$assignIpId")
-            .retrieve().toEntity(AssignIpQueryResponse::class.java)
-            .flatMap { entity ->
-                if(entity.body != null) true.toMono()
-                else false.toMono()
-            }
+            .uri("lb://assign-ip-manage-server/api/v1/assign-ip/query/$assignIpId/exists")
+            .retrieve()
+            .onStatus({ !it.is2xxSuccessful }, { handleError(QueryType.QUERY_EXISTS_ASSIGN_IP_BY_ID, it) })
+            .bodyToMono(ExistsAssignIpQueryResponse::class.java)
+            .map { response -> response.isExists }
 
     override fun findById(assignIpId: Long): Mono<AssignIpDto> =
         webClientBuilder
             .build()
             .get()
             .uri("lb://assign-ip-manage-server/api/v1/assign-ip/query/$assignIpId")
-            .retrieve().bodyToMono(AssignIpQueryResponse::class.java)
+            .retrieve()
+            .onStatus({ !it.is2xxSuccessful }, { handleError(QueryType.QUERY_ASSIGN_IP_BY_ID, it) })
+            .bodyToMono(AssignIpQueryResponse::class.java)
             .map { it.data }
+
+    fun handleError(type: QueryType, response: ClientResponse): Mono<Throwable> =
+        response.toMono()
+            .flatMap { it.bodyToMono(ErrorResponse::class.java) }
+            .flatMap<Throwable?> { error -> Mono.error(ApiException(type = type, response = error)) }
+            .onErrorReturn(ApiException(type = type, response = ErrorResponse(
+                status = ErrorStatus.API_ERROR,
+                message = "서버에서 오류가 발생했습니다.",
+                detail = "서버에서 외부 API통신중 알 수 없는 오류가 발생하였습니다! 요청: $type 응답상태: ${response.statusCode()}"
+            )))
 }
