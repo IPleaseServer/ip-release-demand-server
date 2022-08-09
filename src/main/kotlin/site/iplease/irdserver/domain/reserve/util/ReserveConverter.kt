@@ -13,5 +13,5 @@ interface ReserveConverter {
     fun toDto(id: Long, issuerId: Long): Mono<ReserveDto>
     fun toDto(request: CreateIpReleaseReserveRequest, issuerId: Long): Mono<ReserveDto>
     fun toCreateIpReleaseReserveResponse(dto: ReserveDto): Mono<CreateIpReleaseReserveResponse>
-    fun toCancelIpReleaseReserveResponse(it: ReserveDto): Mono<CancelIpReleaseReserveResponse>
+    fun toCancelIpReleaseReserveResponse(dto: ReserveDto): Mono<CancelIpReleaseReserveResponse>
 }
