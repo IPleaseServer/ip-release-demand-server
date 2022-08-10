@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto
 import site.iplease.irdserver.domain.reserve.data.entity.Reserve
-import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
 import site.iplease.irdserver.domain.reserve.util.ReserveConverter
 import site.iplease.irdserver.domain.reserve.util.ReserveValidator
@@ -27,7 +26,7 @@ class ReserveServiceImplTest {
         reserveConverter = mock()
         reserveRepository = mock()
         reserveValidator = mock()
-        target = ReserveServiceImpl(reserveConverter, reserveRepository, reserveValidator)
+        target = ReserveServiceImpl(reserveConverter, reserveRepository)
     }
 
     @Test @DisplayName("IP할당해제예약추가 성공 테스트")
@@ -41,7 +40,6 @@ class ReserveServiceImplTest {
 
         //when
         whenever(reserveConverter.toEntity(dto)).thenReturn(entity.toMono())
-        whenever(reserveValidator.validate(dto, ReservePolicyType.RESERVE_CREATE)).thenReturn(Unit.toMono())
         whenever(entity.copy(id=0)).thenReturn(newEntity)
         whenever(reserveRepository.save(newEntity)).thenReturn(savedEntity.toMono())
         whenever(reserveConverter.toDto(savedEntity)).thenReturn(expectedResult.toMono())
@@ -50,7 +48,6 @@ class ReserveServiceImplTest {
 
         //then
         assertEquals(expectedResult, result)
-        verify(reserveValidator, times(1)).validate(dto, ReservePolicyType.RESERVE_CREATE)
         verify(reserveRepository, times(1)).save(newEntity)
     }
 }

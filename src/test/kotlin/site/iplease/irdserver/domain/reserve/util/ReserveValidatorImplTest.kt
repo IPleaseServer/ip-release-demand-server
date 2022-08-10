@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import reactor.kotlin.core.publisher.toMono
-import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto
+import site.iplease.irdserver.domain.reserve.data.dto.ReserveValidationDto
 import site.iplease.irdserver.domain.reserve.data.type.ReservePermission
 import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
@@ -39,7 +39,7 @@ class ReserveValidatorImplTest {
         //given
         val assignIpId = Random.nextLong()
         val issuerId = Random.nextLong()
-        val dto = mock<ReserveDto>()
+        val dto = mock<ReserveValidationDto>()
 
         //when
         whenever(dto.assignIpId).thenReturn(assignIpId)
