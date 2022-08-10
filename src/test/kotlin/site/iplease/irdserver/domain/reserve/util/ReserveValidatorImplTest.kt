@@ -13,6 +13,7 @@ import site.iplease.irdserver.domain.reserve.data.dto.ReserveValidationDto
 import site.iplease.irdserver.domain.reserve.data.type.ReservePermission
 import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 import kotlin.random.Random
 
@@ -44,10 +45,11 @@ class ReserveValidatorImplTest {
         //when
         whenever(dto.assignIpId).thenReturn(assignIpId)
         whenever(dto.issuerId).thenReturn(issuerId)
+        whenever(dto.issuerPermission).thenReturn(PermissionType.USER)
 
         whenever(reserveRepository.existsByAssignIpId(assignIpId)).thenReturn(false.toMono())
         whenever(assignIpQueryService.existsById(assignIpId)).thenReturn(true.toMono())
-        whenever(reservePermissionValidator.validate(ReservePermission.CREATE, assignIpId = assignIpId, issuerId = issuerId)).thenReturn(Unit.toMono())
+        whenever(reservePermissionValidator.validate(ReservePermission.CREATE, assignIpId = assignIpId, issuerId = issuerId, issuerPermission = PermissionType.USER)).thenReturn(Unit.toMono())
 
         val result = target.validate(dto, ReservePolicyType.RESERVE_CREATE).block()!!
 
@@ -55,6 +57,6 @@ class ReserveValidatorImplTest {
         assertEquals(result, Unit)
         verify(reserveRepository, times(1)).existsByAssignIpId(assignIpId)
         verify(assignIpQueryService, times(1)).existsById(assignIpId)
-        verify(reservePermissionValidator, times(1)).validate(ReservePermission.CREATE, assignIpId = assignIpId, issuerId = issuerId)
+        verify(reservePermissionValidator, times(1)).validate(ReservePermission.CREATE, assignIpId = assignIpId, issuerId = issuerId, issuerPermission = PermissionType.USER)
     }
 }

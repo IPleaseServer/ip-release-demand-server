@@ -12,6 +12,7 @@ import site.iplease.irdserver.domain.reserve.exception.AlreadyReservedAssignIpEx
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
 import site.iplease.irdserver.global.common.exception.PermissionDeniedException
 import site.iplease.irdserver.global.common.exception.UnknownAssignIpException
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 
 @Component
@@ -25,7 +26,7 @@ class ReserveValidatorImpl(
             RESERVE_CREATE ->
                 isExistsByAssignIpId(dto.assignIpId, Mono.defer { Mono.error(AlreadyReservedAssignIpException("이미 id가 ${dto.assignIpId}인 할당IP에 대한 해제예약이 존재합니다!")) }, Unit.toMono())
                     .flatMap { isAssignIpExists(dto.assignIpId) }
-                    .flatMap { hasPermission(ReservePermission.CREATE, assignIpId =  dto.assignIpId, issuerId = dto.issuerId) }
+                    .flatMap { hasPermission(ReservePermission.CREATE, assignIpId =  dto.assignIpId, issuerId = dto.issuerId, issuerPermission = dto.issuerPermission) }
 
             RESERVE_CANCEL -> 
                 isExistsByAssignIpId(dto.assignIpId, Mono.defer { Mono.error(UnknownAssignIpException("해당 id의 할당IP이 존재하지 않습니다!")) }, Unit.toMono())
@@ -47,6 +48,6 @@ class ReserveValidatorImpl(
             else Mono.error(UnknownAssignIpException("할당IP id가 ${assignIpId}인 할당IP가 존재하지 않습니다!"))
         }
 
-    private fun hasPermission(permission: ReservePermission, assignIpId: Long, issuerId: Long): Mono<Unit> =
-        reservePermissionValidator.validate(permission, assignIpId = assignIpId, issuerId = issuerId)
+    private fun hasPermission(permission: ReservePermission, assignIpId: Long, issuerId: Long, issuerPermission: PermissionType): Mono<Unit> =
+        reservePermissionValidator.validate(permission, assignIpId = assignIpId, issuerId = issuerId, issuerPermission = issuerPermission)
 }
