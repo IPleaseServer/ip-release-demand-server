@@ -6,19 +6,17 @@ import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.reserve.data.type.ReservePermission
 import site.iplease.irdserver.global.common.exception.PermissionDeniedException
 import site.iplease.irdserver.infra.account.data.type.PermissionType
-import site.iplease.irdserver.infra.account.service.AccountQueryService
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 import site.iplease.irdserver.domain.reserve.util.ReservePermissionValidatorImpl.ReservePermissionValidateStatus.*
 
 @Component
 class ReservePermissionValidatorImpl(
-    private val accountQueryService: AccountQueryService,
     private val assignIpQueryService: AssignIpQueryService
 ): ReservePermissionValidator {
-    override fun validate(permission: ReservePermission, issuerId: Long, assignIpId: Long): Mono<Unit> =
+    override fun validate(permission: ReservePermission, issuerId: Long, issuerPermission: PermissionType, assignIpId: Long): Mono<Unit> =
         when(permission) {
             //hasPermission.ADMINISTRATOR or isOwner.assignIp
-            ReservePermission.CREATE -> hasPermission(issuerId = issuerId, permission = PermissionType.ADMINISTRATOR)
+            ReservePermission.CREATE -> hasPermission(issuerPermission = issuerPermission, permission = PermissionType.ADMINISTRATOR)
                 .flatMap {
                     if(it != SUCCESS) isOwner(issuerId = issuerId, assignIpId = assignIpId)
                     else it.toMono()
@@ -28,12 +26,8 @@ class ReservePermissionValidatorImpl(
                 }
         }
 
-    private fun hasPermission(issuerId: Long, permission: PermissionType) =
-        accountQueryService.findById(issuerId)
-            .map {
-                if(it.permission == permission) SUCCESS
-                else PERMISSION_DENIED
-            }
+    private fun hasPermission(issuerPermission: PermissionType, permission: PermissionType) =
+        if(issuerPermission == permission) SUCCESS.toMono() else PERMISSION_DENIED.toMono()
 
     private fun isOwner(issuerId: Long, assignIpId: Long) =
         assignIpQueryService.findById(assignIpId)
