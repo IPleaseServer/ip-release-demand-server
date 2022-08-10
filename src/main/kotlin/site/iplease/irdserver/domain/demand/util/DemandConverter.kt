@@ -2,11 +2,11 @@ package site.iplease.irdserver.domain.demand.util
 
 import reactor.core.publisher.Mono
 import site.iplease.irdserver.domain.demand.data.entity.Demand
-import site.iplease.irdserver.domain.demand.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.domain.demand.data.response.AcceptReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.data.response.CancelReleaseDemandResponse
-import site.iplease.irdserver.domain.demand.data.response.CreateReleaseDemandResponse
+import site.iplease.irdserver.global.demand.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.dto.DemandDto
+import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
 
 interface DemandConverter {
     fun toEntity(dto: DemandDto): Mono<Demand>

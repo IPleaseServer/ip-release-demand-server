@@ -4,12 +4,12 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.demand.data.entity.Demand
-import site.iplease.irdserver.domain.demand.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.domain.demand.data.response.AcceptReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.data.response.CancelReleaseDemandResponse
-import site.iplease.irdserver.domain.demand.data.response.CreateReleaseDemandResponse
+import site.iplease.irdserver.global.demand.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.dto.DemandDto
 import site.iplease.irdserver.domain.demand.data.type.DemandStatusType
+import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
 
 @Component
 class DemandConverterImpl: DemandConverter {

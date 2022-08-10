@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "site.iplease"
-version = "0.5.3-RELEASE"
+version = "1.0.0-RELEASE"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {
