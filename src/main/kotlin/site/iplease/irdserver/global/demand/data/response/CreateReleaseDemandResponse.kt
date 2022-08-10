@@ -1,3 +1,3 @@
-package site.iplease.irdserver.domain.demand.data.response
+package site.iplease.irdserver.global.demand.data.response
 
 data class CreateReleaseDemandResponse(val demandId: Long)

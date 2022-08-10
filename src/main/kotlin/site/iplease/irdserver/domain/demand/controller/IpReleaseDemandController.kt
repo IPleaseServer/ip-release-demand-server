@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
-import site.iplease.irdserver.domain.demand.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.domain.demand.data.response.AcceptReleaseDemandResponse
-import site.iplease.irdserver.domain.demand.data.response.CreateReleaseDemandResponse
+import site.iplease.irdserver.global.demand.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.data.response.CancelReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.service.DemandService
 import site.iplease.irdserver.domain.demand.util.DemandConverter
+import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.infra.alarm.service.PushAlarmService
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpCommandService
 
