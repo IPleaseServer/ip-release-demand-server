@@ -7,10 +7,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import reactor.kotlin.core.publisher.toMono
-import site.iplease.irdserver.domain.demand.data.request.CreateReleaseDemandRequest
+import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.domain.demand.data.response.AcceptReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.data.response.CancelReleaseDemandResponse
-import site.iplease.irdserver.domain.demand.data.response.CreateReleaseDemandResponse
+import site.iplease.irdserver.global.demand.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.demand.dto.DemandDto
 import site.iplease.irdserver.domain.demand.service.DemandService
 import site.iplease.irdserver.domain.demand.util.DemandConverter

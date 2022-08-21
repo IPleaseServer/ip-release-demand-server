@@ -4,10 +4,12 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto
+import site.iplease.irdserver.domain.reserve.data.dto.ReserveValidationDto
 import site.iplease.irdserver.domain.reserve.data.entity.Reserve
 import site.iplease.irdserver.domain.reserve.data.request.CreateIpReleaseReserveRequest
 import site.iplease.irdserver.domain.reserve.data.response.CancelIpReleaseReserveResponse
 import site.iplease.irdserver.domain.reserve.data.response.CreateIpReleaseReserveResponse
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 import java.time.LocalDate
 
 @Component
@@ -49,4 +51,22 @@ class ReserveConverterImpl: ReserveConverter {
 
     override fun toCancelIpReleaseReserveResponse(dto: ReserveDto): Mono<CancelIpReleaseReserveResponse> =
         Unit.toMono().map { CancelIpReleaseReserveResponse(reserveId = dto.id) }
+
+    override fun toValidationDto(dto: ReserveDto): Mono<ReserveValidationDto> =
+        Unit.toMono().map { ReserveValidationDto(
+            reserveId = dto.id,
+            assignIpId = dto.assignIpId,
+            issuerId = dto.issuerId,
+            releaseAt = dto.releaseAt,
+            issuerPermission = PermissionType.UNKNOWN,
+        ) }
+
+    override fun toValidationDto(dto: ReserveDto, permission: PermissionType): Mono<ReserveValidationDto> =
+        Unit.toMono().map { ReserveValidationDto(
+            reserveId = dto.id,
+            assignIpId = dto.assignIpId,
+            issuerId = dto.issuerId,
+            releaseAt = dto.releaseAt,
+            issuerPermission = permission,
+        ) }
 }
