@@ -10,6 +10,7 @@ import site.iplease.irdserver.global.demand.data.response.CreateReleaseDemandRes
 import site.iplease.irdserver.domain.demand.dto.DemandDto
 import site.iplease.irdserver.domain.demand.data.type.DemandStatusType
 import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 
 @Component
 class DemandConverterImpl: DemandConverter {
@@ -26,6 +27,7 @@ class DemandConverterImpl: DemandConverter {
             id = demandId,
             assignIpId = -1,
             issuerId = -1,
+            issuerPermission = PermissionType.UNKNOWN,
             status = DemandStatusType.CREATE,
         ) }
 
@@ -34,6 +36,7 @@ class DemandConverterImpl: DemandConverter {
             id = entity.id,
             assignIpId = entity.assignIpId,
             issuerId = entity.issuerId,
+            issuerPermission = PermissionType.UNKNOWN,
             status = entity.status,
         ) }
 
@@ -42,14 +45,16 @@ class DemandConverterImpl: DemandConverter {
             id = demandId,
             assignIpId = -1,
             issuerId = issuerId,
+            issuerPermission = PermissionType.UNKNOWN,
             status = DemandStatusType.CREATE,
         ) }
 
-    override fun toDto(request: CreateReleaseDemandRequest, issuerId: Long): Mono<DemandDto> =
+    override fun toDto(request: CreateReleaseDemandRequest, issuerId: Long, issuerPermission: PermissionType): Mono<DemandDto> =
         Unit.toMono().map { DemandDto(
             id = 0,
             assignIpId = request.assignIpId,
             issuerId = issuerId,
+            issuerPermission = issuerPermission,
             status = DemandStatusType.CREATE,
         ) }
 

@@ -10,6 +10,7 @@ import site.iplease.irdserver.domain.demand.exception.*
 import site.iplease.irdserver.domain.demand.repository.DemandRepository
 import site.iplease.irdserver.global.common.exception.PermissionDeniedException
 import site.iplease.irdserver.global.common.exception.UnknownAssignIpException
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpQueryService
 
 @Component
@@ -21,7 +22,7 @@ class DemandValidatorImpl(
         when(policyType) {
             DemandPolicyType.DEMAND_CREATE -> isNotExistsByAssignIpId(dto.assignIpId)
                 .flatMap { isAssignIpExists(dto.assignIpId) }
-                .flatMap { isAssignIpOwner(dto.assignIpId, dto.issuerId) }
+                .flatMap { isAssignIpCanAccess(dto.assignIpId, dto.issuerId, dto.issuerPermission) }
             DemandPolicyType.DEMAND_CANCEL -> isExists(dto.id)
                 .flatMap { isOwner(dto.id, dto.issuerId) }
             DemandPolicyType.DEMAND_ACCEPT -> isExists(dto.id)
@@ -60,10 +61,10 @@ class DemandValidatorImpl(
                 else Mono.error(UnknownAssignIpException("할당IP id가 ${assignIpId}인 할당IP가 존재하지 않습니다!"))
             }
 
-    private fun isAssignIpOwner(assignIpId: Long, issuerId: Long): Mono<Unit> =
+    private fun isAssignIpCanAccess(assignIpId: Long, issuerId: Long, issuerPermission: PermissionType): Mono<Unit> =
         assignIpQueryService.findById(assignIpId)
             .flatMap { assignIp ->
-                if(assignIp.assigneeId == issuerId) Unit.toMono()
+                if(assignIp.assigneeId == issuerId || issuerPermission == PermissionType.ADMINISTRATOR) Unit.toMono()
                 else Mono.error(PermissionDeniedException("IP할당해제신청은 할당IP의 소유자만 가능합니다! - 할당IP ID: ${assignIpId}, 할당자 ID: ${assignIp.assigneeId}, 요청자 ID: $issuerId"))
             }
 }

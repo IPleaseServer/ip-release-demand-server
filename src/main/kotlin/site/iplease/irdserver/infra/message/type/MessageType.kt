@@ -4,6 +4,7 @@ enum class MessageType(
     val routingKey: String
 ) {
     SEND_ALARM("sendAlarm"),
+    ASSIGN_IP_CREATE("assignIpCreate"),
     UNKNOWN(""),;
 
     companion object {

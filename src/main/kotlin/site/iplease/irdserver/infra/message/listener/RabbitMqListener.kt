@@ -7,11 +7,14 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
+import site.iplease.irdserver.global.accept.data.message.AssignIpCreateMessage
+import site.iplease.irdserver.global.accept.subscriber.AssignIpCreateSubscriber
 import site.iplease.irdserver.infra.message.type.MessageType
 
 @Component
 class RabbitMqListener(
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val assignIpCreateSubscriber: AssignIpCreateSubscriber
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -31,6 +34,9 @@ class RabbitMqListener(
 
     private fun handleMessage(type: MessageType, payload: String): Mono<Unit> =
         when(type) {
+            MessageType.ASSIGN_IP_CREATE -> objectMapper.toMono()
+                .map { it.readValue(payload, AssignIpCreateMessage::class.java) }
+                .map { message -> assignIpCreateSubscriber.subscribe(message) }
             else -> {
                 logger.warn("처리대상이 아닌 메세지가 바인딩되어있습니다!")
                 logger.warn("routingKey: ${type.routingKey}")

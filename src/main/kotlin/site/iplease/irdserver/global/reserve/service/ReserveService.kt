@@ -1,4 +1,4 @@
-package site.iplease.irdserver.domain.reserve.service
+package site.iplease.irdserver.global.reserve.service
 
 import reactor.core.publisher.Mono
 import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto

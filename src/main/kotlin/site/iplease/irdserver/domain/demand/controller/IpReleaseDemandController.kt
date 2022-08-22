@@ -16,6 +16,7 @@ import site.iplease.irdserver.domain.demand.data.response.CancelReleaseDemandRes
 import site.iplease.irdserver.domain.demand.service.DemandService
 import site.iplease.irdserver.domain.demand.util.DemandConverter
 import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 import site.iplease.irdserver.infra.alarm.service.PushAlarmService
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpCommandService
 
@@ -30,9 +31,10 @@ class IpReleaseDemandController(
     @PostMapping
     fun createReleaseDemand(
         @RequestHeader("X-Authorization-Id") issuerId: Long,
+        @RequestHeader("X-Authorization-Permission") issuerPermission: PermissionType,
         @RequestBody request: CreateReleaseDemandRequest
     ): Mono<ResponseEntity<CreateReleaseDemandResponse>> =
-        demandConverter.toDto(request, issuerId)
+        demandConverter.toDto(request, issuerId, issuerPermission)
             .flatMap { demandService.addDemand(it) }
             .flatMap { demandConverter.toCreateReleaseDemandResponse(it) }
             .map { ResponseEntity.ok(it) }

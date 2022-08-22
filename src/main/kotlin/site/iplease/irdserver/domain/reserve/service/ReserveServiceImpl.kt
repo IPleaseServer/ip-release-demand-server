@@ -6,6 +6,7 @@ import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.reserve.data.dto.ReserveDto
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
 import site.iplease.irdserver.domain.reserve.util.ReserveConverter
+import site.iplease.irdserver.global.reserve.service.ReserveService
 
 @Service
 class ReserveServiceImpl(

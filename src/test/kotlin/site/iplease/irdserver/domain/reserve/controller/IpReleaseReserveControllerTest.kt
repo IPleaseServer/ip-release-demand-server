@@ -16,7 +16,7 @@ import site.iplease.irdserver.domain.reserve.data.dto.ReserveValidationDto
 import site.iplease.irdserver.domain.reserve.data.request.CreateIpReleaseReserveRequest
 import site.iplease.irdserver.domain.reserve.data.response.CreateIpReleaseReserveResponse
 import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType
-import site.iplease.irdserver.domain.reserve.service.ReserveService
+import site.iplease.irdserver.global.reserve.service.ReserveService
 import site.iplease.irdserver.domain.reserve.util.ReserveConverter
 import site.iplease.irdserver.domain.reserve.util.ReserveValidator
 

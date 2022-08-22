@@ -13,7 +13,7 @@ import site.iplease.irdserver.domain.reserve.data.request.CreateIpReleaseReserve
 import site.iplease.irdserver.domain.reserve.data.response.CancelIpReleaseReserveResponse
 import site.iplease.irdserver.domain.reserve.data.response.CreateIpReleaseReserveResponse
 import site.iplease.irdserver.domain.reserve.data.type.ReservePolicyType
-import site.iplease.irdserver.domain.reserve.service.ReserveService
+import site.iplease.irdserver.global.reserve.service.ReserveService
 import site.iplease.irdserver.domain.reserve.util.ReserveConverter
 import site.iplease.irdserver.domain.reserve.util.ReserveValidator
 import site.iplease.irdserver.infra.account.data.type.PermissionType

@@ -8,9 +8,11 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.global.demand.data.response.CreateReleaseDemandResponse
 import site.iplease.irdserver.domain.reserve.repository.ReserveRepository
+import site.iplease.irdserver.global.account.config.AccountProperties
 import site.iplease.irdserver.global.common.util.DateUtil
 import site.iplease.irdserver.global.demand.data.request.CreateReleaseDemandRequest
 import site.iplease.irdserver.global.error.ErrorResponse
+import site.iplease.irdserver.infra.account.data.type.PermissionType
 import site.iplease.irdserver.infra.assign_ip.data.type.QueryType
 import site.iplease.irdserver.infra.assign_ip.exception.ApiException
 import kotlin.random.Random
@@ -19,7 +21,8 @@ import kotlin.random.Random
 class IpReleaseReserveStrategyImpl(
     private val reserveRepository: ReserveRepository,
     private val dateUtil: DateUtil,
-    private val webClientBuilder: WebClient.Builder //TODO infra로 넘길지 고민하기
+    private val webClientBuilder: WebClient.Builder, //TODO infra로 넘길지 고민하기
+    private val accountProperties: AccountProperties
 ): IpReleaseReserveStrategy {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -31,6 +34,7 @@ class IpReleaseReserveStrategyImpl(
                     .post()
                     .uri("lb://ip-release-demand-server/api/v1/release/demand")
                     .header("X-Authorization-Id", "${reserve.issuerId}")
+                    .header("X-Authorization-Permission", if(accountProperties.adminId == reserve.issuerId) PermissionType.ADMINISTRATOR.name else PermissionType.USER.name)
                     .bodyValue(CreateReleaseDemandRequest(reserve.assignIpId))
                     .retrieve()
                     .onStatus({ !it.is2xxSuccessful }, { handleError(QueryType.ADD_RELEASE_DEMAND, it) })
