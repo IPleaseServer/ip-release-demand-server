@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import site.iplease.irdserver.domain.query.config.DataQueryProperty
 import site.iplease.irdserver.domain.query.response.PagableReleaseDemandQueryResponse
+import site.iplease.irdserver.domain.query.response.ReleaseDemandQueryResponse
 import site.iplease.irdserver.domain.query.service.ReleaseDemandQueryService
 
 @RestController
