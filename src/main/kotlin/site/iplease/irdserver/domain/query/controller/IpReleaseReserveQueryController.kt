@@ -25,7 +25,7 @@ class IpReleaseReserveQueryController(
 
     @GetMapping("/issuer")
     fun getReleaseReserveByIssuerId(@RequestParam page: Int, @RequestParam issuerId: Long): Mono<ResponseEntity<PagableReleaseReserveQueryResponse>> =
-        PageRequest.of(page, dataQueryProperty.all.pageSize).toMono()
+        PageRequest.of(page, dataQueryProperty.byIssuer.pageSize).toMono()
             .flatMap { releaseReserveQueryService.getAllReleaseReserveByIssuerId(it, issuerId) }
             .map { PagableReleaseReserveQueryResponse(it) }
             .map { ResponseEntity.ok(it) }

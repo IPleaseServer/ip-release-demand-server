@@ -29,7 +29,7 @@ class IpReleaseDemandQueryController(
 
     @GetMapping("/issuer")
     fun getReleaseDemandByIssuerId(@RequestParam page: Int, @RequestParam issuerId: Long): Mono<ResponseEntity<PagableReleaseDemandQueryResponse>> =
-        PageRequest.of(page, dataQueryProperty.all.pageSize).toMono()
+        PageRequest.of(page, dataQueryProperty.byIssuer.pageSize).toMono()
             .flatMap { releaseDemandQueryService.getAllReleaseDemandByIssuerId(it, issuerId) }
             .map { PagableReleaseDemandQueryResponse(it) }
             .map { ResponseEntity.ok(it) }
