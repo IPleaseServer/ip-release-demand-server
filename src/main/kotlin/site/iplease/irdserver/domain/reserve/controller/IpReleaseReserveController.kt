@@ -19,7 +19,7 @@ import site.iplease.irdserver.domain.reserve.util.ReserveValidator
 import site.iplease.irdserver.infra.account.data.type.PermissionType
 
 @RestController
-@RequestMapping("/api/v1/reserve/release")
+@RequestMapping("/api/v1/reserve/release/command")
 class IpReleaseReserveController(
     private val reserveService: ReserveService,
     private val reserveConverter: ReserveConverter,
