@@ -21,7 +21,7 @@ import site.iplease.irdserver.infra.alarm.service.PushAlarmService
 import site.iplease.irdserver.infra.assign_ip.service.AssignIpCommandService
 
 @RestController
-@RequestMapping("/api/v1/demand/release")
+@RequestMapping("/api/v1/demand/release/command")
 class IpReleaseDemandController(
     private val demandConverter: DemandConverter,
     private val demandService: DemandService,
