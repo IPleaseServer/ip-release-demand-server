@@ -19,7 +19,7 @@ class ReleaseReserveQueryServiceImpl(
     override fun getAllReleaseReserve(page: PageRequest): Mono<Page<ReserveDto>> = reserveRepository.findBy(page).convert()
     override fun getAllReleaseReserveByIssuerId(page: PageRequest, issuerId: Long): Mono<Page<ReserveDto>> = reserveRepository.findAllByIssuerId(page, issuerId).convert()
     override fun getReleaseReserveById(reserveId: Long): Mono<ReserveDto> = reserveRepository.findById(reserveId).flatMap { reserveConverter.toDto(it) }
-    override fun getReleaseReserveByAssignIpId(page: PageRequest, assignIpId: Long): Mono<Page<ReserveDto>> = reserveRepository.findAllByAssignIpId(page, assignIpId).convert()
+    override fun getReleaseReserveByAssignIpId(assignIpId: Long): Mono<ReserveDto> = reserveRepository.findByAssignIpId(assignIpId).flatMap { reserveConverter.toDto(it) }
 
     private fun Flux<Reserve>.convert(): Mono<Page<ReserveDto>> =
         flatMap { reserveConverter.toDto(it) }

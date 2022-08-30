@@ -31,10 +31,10 @@ class IpReleaseReserveQueryController(
             .map { ResponseEntity.ok(it) }
 
     @GetMapping("/assign-ip")
-    fun getReleaseReserveByAssignIpId(@RequestParam page: Int, @RequestParam assignIpId: Long): Mono<ResponseEntity<PagableReleaseReserveQueryResponse>> =
+    fun getReleaseReserveByAssignIpId(@RequestParam page: Int, @RequestParam assignIpId: Long): Mono<ResponseEntity<ReleaseReserveQueryResponse>> =
         PageRequest.of(page, dataQueryProperty.byIssuer.pageSize).toMono()
-            .flatMap { releaseReserveQueryService.getReleaseReserveByAssignIpId(it, assignIpId) }
-            .map { PagableReleaseReserveQueryResponse(it) }
+            .flatMap { releaseReserveQueryService.getReleaseReserveByAssignIpId(assignIpId) }
+            .map { ReleaseReserveQueryResponse(it) }
             .map { ResponseEntity.ok(it) }
 
     @GetMapping("/{reserveId}")

@@ -12,5 +12,5 @@ interface ReserveRepository: ReactiveCrudRepository<Reserve, Long> {
     fun findAllByIssuerId(page: Pageable, issuerId: Long): Flux<Reserve>
     fun existsByAssignIpId(assignIpId: Long): Mono<Boolean>
     fun findAllByReleaseAt(releaseAt: LocalDate): Flux<Reserve>
-    fun findAllByAssignIpId(page: Pageable, assignIpId: Long): Flux<Reserve>
+    fun findByAssignIpId(assignIpId: Long): Mono<Reserve>
 }

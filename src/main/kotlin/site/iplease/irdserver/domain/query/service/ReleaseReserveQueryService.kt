@@ -9,5 +9,5 @@ interface ReleaseReserveQueryService {
     fun getAllReleaseReserve(page: PageRequest): Mono<Page<ReserveDto>>
     fun getAllReleaseReserveByIssuerId(page: PageRequest, issuerId: Long): Mono<Page<ReserveDto>>
     fun getReleaseReserveById(reserveId: Long): Mono<ReserveDto>
-    fun getReleaseReserveByAssignIpId(page: PageRequest, assignIpId: Long): Mono<Page<ReserveDto>>
+    fun getReleaseReserveByAssignIpId(assignIpId: Long): Mono<ReserveDto>
 }
