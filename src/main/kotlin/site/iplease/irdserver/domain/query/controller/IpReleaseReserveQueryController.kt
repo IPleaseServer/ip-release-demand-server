@@ -30,6 +30,13 @@ class IpReleaseReserveQueryController(
             .map { PagableReleaseReserveQueryResponse(it) }
             .map { ResponseEntity.ok(it) }
 
+    @GetMapping("/assign-ip")
+    fun getReleaseReserveByAssignIpId(@RequestParam page: Int, @RequestParam assignIpId: Long): Mono<ResponseEntity<PagableReleaseReserveQueryResponse>> =
+        PageRequest.of(page, dataQueryProperty.byIssuer.pageSize).toMono()
+            .flatMap { releaseReserveQueryService.getReleaseReserveByAssignIpId(it, assignIpId) }
+            .map { PagableReleaseReserveQueryResponse(it) }
+            .map { ResponseEntity.ok(it) }
+
     @GetMapping("/{reserveId}")
     fun getReleaseReserveById(@PathVariable reserveId: Long): Mono<ResponseEntity<ReleaseReserveQueryResponse>> =
         releaseReserveQueryService.getReleaseReserveById(reserveId)
